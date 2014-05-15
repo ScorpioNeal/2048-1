@@ -46,16 +46,12 @@ public class MainGame {
 	final int startTiles = 2;
 
 	public int gameState = 0;
-	public boolean canUndo;
 
 	public long score = 0;
 	public long highScore = 0;
 
 	public long lastScore = 0;
 	public int lastGameState = 0;
-
-	private long bufferScore = 0;
-	private int bufferGameState = 0;
 
 	private SoundPool soudPool;
 	private HashMap<Integer, Integer> spMap;
@@ -75,8 +71,6 @@ public class MainGame {
 		if (grid == null) {
 			grid = new Grid(numSquaresX, numSquaresY);
 		} else {
-			prepareUndoState();
-			saveUndoState();
 			grid.clearGrid();
 		}
 		aGrid = new AnimationGrid(numSquaresX, numSquaresY);
@@ -146,53 +140,6 @@ public class MainGame {
 		tile.updatePosition(cell);
 	}
 
-	private void saveUndoState() {
-		grid.saveTiles();
-		canUndo = true;
-		lastScore = bufferScore;
-		lastGameState = bufferGameState;
-	}
-
-	// cheat remove 2
-	public void cheat() {
-		playSound(3, 1);
-		ArrayList<Cell> notAvailableCell = grid.getNotAvailableCells();
-		Tile tile;
-		prepareUndoState();
-		for (Cell cell : notAvailableCell) {
-			tile = grid.getCellContent(cell);
-			if (2 == tile.getValue()) {
-				grid.removeTile(tile);
-			}
-		}
-
-		if (grid.getNotAvailableCells().size() == 0) {
-			addStartTiles();
-		}
-		saveUndoState();
-		mView.resyncTime();
-		mView.invalidate();
-
-	}
-
-	private void prepareUndoState() {
-		grid.prepareSaveTiles();
-		bufferScore = score;
-		bufferGameState = gameState;
-	}
-
-	public void revertUndoState() {
-		playSound(3, 1);
-		if (canUndo) {
-			canUndo = false;
-			aGrid.cancelAnimations();
-			grid.revertTiles();
-			score = lastScore;
-			gameState = lastGameState;
-			mView.refreshLastTime = true;
-			mView.invalidate();
-		}
-	}
 
 	public boolean gameWon() {
 		return (gameState > 0 && gameState % 2 != 0);
@@ -213,7 +160,6 @@ public class MainGame {
 		if (!isActive()) {
 			return;
 		}
-		prepareUndoState();
 		Cell vector = getVector(direction);
 		List<Integer> traversalsX = buildTraversalsX(vector);
 		List<Integer> traversalsY = buildTraversalsY(vector);
@@ -284,7 +230,6 @@ public class MainGame {
 		}
 
 		if (moved) {
-			saveUndoState();
 			addRandomTile();
 			checkLose();
 		}
@@ -411,6 +356,9 @@ public class MainGame {
 		return !(gameState == GAME_ENDLESS || gameState == GAME_ENDLESS_WON);
 	}
 
+	/**
+	 * 初始化音频资源
+	 */
 	private void initSoundPool() {
 		soudPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
 		spMap = new HashMap<Integer, Integer>();
@@ -422,6 +370,11 @@ public class MainGame {
 		spMap.put(5, soudPool.load(mView.getContext(), R.raw.win, 1)); // win
 	}
 
+	/**
+	 * 播放声音
+	 * @param sound
+	 * @param number
+	 */
 	private void playSound(int sound, int number) {
 		AudioManager am = (AudioManager) mView.getContext().getSystemService(
 				Context.AUDIO_SERVICE);

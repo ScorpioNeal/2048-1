@@ -121,10 +121,6 @@ public class InputListener implements View.OnTouchListener {
 			if (!hasMoved) {
 				if (iconPressed(mView.sXNewGame, mView.sYIcons)) {
 					mView.game.newGame();
-				} else if (iconPressed(mView.sXUndo, mView.sYIcons)) {
-					mView.game.revertUndoState();
-				} else if (iconPressed(mView.sXCheat, mView.sYIcons)) {
-					mView.game.cheat();
 				} else if (isTap(2)
 						&& inRange(mView.startingX, x, mView.endingX)
 						&& inRange(mView.startingY, x, mView.endingY)
