@@ -374,13 +374,15 @@ public class MainGame
 
     /**
      * 移步算法，vector表示一个方向 {0,1},{0,-1},{1,0},{-1,0}
-     * 
+     * 看不懂。。。。。。。
      * @param cell
      * @param vector
      * @return Cell[] {previous cell , nextCell}
      */
     private Cell[] findFarthestPosition(Cell cell, Cell vector)
     {
+        Util.debugLog("MainGame.findFarthestPosition " + "input cell " + cell.getX() + " "
+                + cell.getY() + " answer vector " + vector.getX() + " " + vector.getY());
         Cell previous;
         Cell nextCell = new Cell(cell.getX(), cell.getY());
         do
@@ -392,6 +394,8 @@ public class MainGame
         Cell[] answer = {
                 previous, nextCell
         };
+        Util.debugLog("MainGame.findFarthestPosition " + "answer previous " + previous.getX() + " "
+                + previous.getY() + " answer nextCell " + nextCell.getX() + " " + nextCell.getY());
         return answer;
     }
 
@@ -422,7 +426,10 @@ public class MainGame
                         Cell vector = getVector(direction);
                         Cell cell = new Cell(xx + vector.getX(), yy + vector.getY());
                         Tile other = grid.getCellContent(cell);
-                        // 下一个tile不为空而且下一个与当前的相同??
+                        // 下一个tile不为空而且下一个与当前的相同
+                        // 因为下一个为空的情况在movesAvailable
+                        // 里面的grid.isCellsAvailable里面判断过了， 所以这里面就不需要判断为空的情况了
+                        // 其实这里other == null 也可以return true
                         if (other != null && other.getValue() == tile.getValue())
                         {
                             return true;
