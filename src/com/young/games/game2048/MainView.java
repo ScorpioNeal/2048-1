@@ -105,7 +105,6 @@ public class MainView extends View
             drawNewGameButton(canvas, true);
         }
         
-        //TODO
         drawCells(canvas);
 
         if (!game.isActive())
@@ -301,6 +300,10 @@ public class MainView extends View
         }
     }
 
+    /**
+     * MS是主要功能， 画界面上的方块
+     * @param canvas
+     */
     private void drawCells(Canvas canvas)
     {
         Util.debugLog("MainView.drawCells");
@@ -322,11 +325,13 @@ public class MainView extends View
                 {
                     // Get and represent the value of the tile
                     int value = currentTile.getValue();
+                    //获取index来取得对应数组的位置 e.g 32->5
                     int index = log2(value);
 
                     // Check for any active animations
                     ArrayList<AnimationCell> aArray = game.aGrid.getAnimationCell(xx, yy);
                     boolean animated = false;
+                    //TODO 动画
                     for (int i = aArray.size() - 1; i >= 0; i--)
                     {
                         AnimationCell aCell = aArray.get(i);
@@ -403,6 +408,10 @@ public class MainView extends View
         }
     }
 
+    /**
+     * 画结束的时候的覆盖层次
+     * @param canvas
+     */
     private void drawEndGameState(Canvas canvas)
     {
         double alphaChange = 1;
@@ -544,6 +553,9 @@ public class MainView extends View
         loseGameOverlay = new BitmapDrawable(resources, bitmap);
     }
 
+    /**
+     * 暂不清楚
+     */
     private void tick()
     {
         currentTime = System.nanoTime();
@@ -560,6 +572,7 @@ public class MainView extends View
     {
         if (n <= 0)
             throw new IllegalArgumentException();
+        //返回具有至多单个 1 位的 int 值，在指定的 int 值中最高位（最左边）的 1 位的位置。
         return 31 - Integer.numberOfLeadingZeros(n);
     }
 

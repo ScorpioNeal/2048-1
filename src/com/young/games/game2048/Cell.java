@@ -1,5 +1,10 @@
 package com.young.games.game2048;
 
+/**
+ * Cell 只包含x, y
+ * @author ScorpioNeal2013
+ *
+ */
 public class Cell {
     private int x;
     private int y;

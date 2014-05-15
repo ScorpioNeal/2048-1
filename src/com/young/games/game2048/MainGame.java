@@ -13,8 +13,17 @@ import java.util.List;
 
 public class MainGame {
 
+    /**
+     * 生成方块
+     */
 	public static final int SPAWN_ANIMATION = -1;
+	/**
+	 * 移动方块
+	 */
 	public static final int MOVE_ANIMATION = 0;
+	/**
+	 * 融合方块
+	 */
 	public static final int MERGE_ANIMATION = 1;
 
 	public static final int FADE_GLOBAL_ANIMATION = 0;

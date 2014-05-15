@@ -2,9 +2,9 @@ package com.young.games.game2048;
 
 public class AnimationCell extends Cell {
     private int animationType;
-    private long timeElapsed;
-    private long animationTime;
-    private long delayTime;
+    private long timeElapsed; //消逝的时间
+    private long animationTime; //动画时间
+    private long delayTime; //延迟时间
     public int[] extras;
 
     public AnimationCell (int x, int y, int animationType, long length, long delay, int[] extras) {

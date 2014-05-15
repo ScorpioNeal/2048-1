@@ -4,18 +4,20 @@ import java.util.ArrayList;
 
 public class Grid {
 
-	public Tile[][] field;
-	public Tile[][] undoField;
-	private Tile[][] bufferField;
+	public Tile[][] field; //已经被填充的方块
+	public Tile[][] undoField; //还未被填充的方块
 
 	public Grid(int sizeX, int sizeY) {
 		field = new Tile[sizeX][sizeY];
 		undoField = new Tile[sizeX][sizeY];
-		bufferField = new Tile[sizeX][sizeY];
 		clearGrid();
 		clearUndoGrid();
 	}
 
+	/**
+	 * 在可用的空余块中随机获取一个Cell
+	 * @return
+	 */
 	public Cell randomAvailableCell() {
 		ArrayList<Cell> availableCells = getAvailableCells();
 		if (availableCells.size() >= 1) {
@@ -25,10 +27,15 @@ public class Grid {
 		return null;
 	}
 
+	/**
+	 * 把所有的空的方块添加到field里面
+	 * @return
+	 */
 	public ArrayList<Cell> getAvailableCells() {
+	    Util.debugLog("Grid.getAvailableCells " + field.length);
 		ArrayList<Cell> availableCells = new ArrayList<Cell>();
 		for (int xx = 0; xx < field.length; xx++) {
-			for (int yy = 0; yy < field[0].length; yy++) {
+			for (int yy = 0; yy < field[xx].length; yy++) {
 				if (field[xx][yy] == null) {
 					availableCells.add(new Cell(xx, yy));
 				}
@@ -37,17 +44,6 @@ public class Grid {
 		return availableCells;
 	}
 
-	public ArrayList<Cell> getNotAvailableCells() {
-		ArrayList<Cell> notAvailableCells = new ArrayList<Cell>();
-		for (int xx = 0; xx < field.length; xx++) {
-			for (int yy = 0; yy < field[0].length; yy++) {
-				if (field[xx][yy] != null) {
-					notAvailableCells.add(new Cell(xx, yy));
-				}
-			}
-		}
-		return notAvailableCells;
-	}
 
 	public boolean isCellsAvailable() {
 		return (getAvailableCells().size() >= 1);
@@ -94,45 +90,10 @@ public class Grid {
 		field[tile.getX()][tile.getY()] = null;
 	}
 
-	public void saveTiles() {
-		for (int xx = 0; xx < bufferField.length; xx++) {
-			for (int yy = 0; yy < bufferField[0].length; yy++) {
-				if (bufferField[xx][yy] == null) {
-					undoField[xx][yy] = null;
-				} else {
-					undoField[xx][yy] = new Tile(xx, yy,
-							bufferField[xx][yy].getValue());
-				}
-			}
-		}
-	}
 
-	public void prepareSaveTiles() {
-		for (int xx = 0; xx < field.length; xx++) {
-			for (int yy = 0; yy < field[0].length; yy++) {
-				if (field[xx][yy] == null) {
-					bufferField[xx][yy] = null;
-				} else {
-					bufferField[xx][yy] = new Tile(xx, yy,
-							field[xx][yy].getValue());
-				}
-			}
-		}
-	}
-
-	public void revertTiles() {
-		for (int xx = 0; xx < undoField.length; xx++) {
-			for (int yy = 0; yy < undoField[0].length; yy++) {
-				if (undoField[xx][yy] == null) {
-					field[xx][yy] = null;
-				} else {
-					field[xx][yy] = new Tile(xx, yy,
-							undoField[xx][yy].getValue());
-				}
-			}
-		}
-	}
-
+	/**
+	 * 把已经填充的给clear
+	 */
 	public void clearGrid() {
 		for (int xx = 0; xx < field.length; xx++) {
 			for (int yy = 0; yy < field[0].length; yy++) {
@@ -141,6 +102,9 @@ public class Grid {
 		}
 	}
 
+	/**
+	 * 把还未填充的给clear
+	 */
 	public void clearUndoGrid() {
 		for (int xx = 0; xx < field.length; xx++) {
 			for (int yy = 0; yy < field[0].length; yy++) {

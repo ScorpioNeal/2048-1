@@ -1,5 +1,11 @@
 package com.young.games.game2048;
 
+/**
+ * 包含cell的value
+ * 以及mergedFrom Tile[]
+ * @author ScorpioNeal2013
+ *
+ */
 public class Tile extends Cell {
 	private int value;
 	private Tile[] mergedFrom = null;
