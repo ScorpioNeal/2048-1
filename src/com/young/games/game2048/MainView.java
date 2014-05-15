@@ -47,7 +47,6 @@ public class MainView extends View
     private Drawable fadeRectangle;
     private Bitmap background = null;
     private BitmapDrawable loseGameOverlay;
-    private BitmapDrawable winGameContinueOverlay;
     private BitmapDrawable winGameFinalOverlay;
 
     // Text variables
@@ -72,7 +71,6 @@ public class MainView extends View
     private String loseText;
     private String continueText;
     private String forNowText;
-    private String endlessModeText;
 
     long lastFPSTime = System.nanoTime();
     long currentTime = System.nanoTime();
@@ -101,20 +99,15 @@ public class MainView extends View
 
         if (!game.isActive() && !game.aGrid.isAnimationActive())
         {
-            //画新开始游戏的界面
+            // 画新开始游戏的界面
             drawNewGameButton(canvas, true);
         }
-        
+
         drawCells(canvas);
 
         if (!game.isActive())
         {
             drawEndGameState(canvas);
-        }
-
-        if (!game.canContinue())
-        {
-            drawEndlessText(canvas);
         }
 
         // Refresh the screen if there is still an animation running
@@ -151,6 +144,7 @@ public class MainView extends View
 
     /**
      * 画方块上面的字的颜色，大于8 白色， 小于8 黑色
+     * 
      * @param canvas
      * @param value
      * @param sX
@@ -172,6 +166,7 @@ public class MainView extends View
 
     /**
      * 画得分的框框 score & high score,没有进去细看
+     * 
      * @param canvas
      */
     private void drawScoreText(Canvas canvas)
@@ -256,6 +251,7 @@ public class MainView extends View
 
     /**
      * 画最下面的指导文字Join the numbers and get to the 2048 title.
+     * 
      * @param canvas
      */
     public void drawInstructions(Canvas canvas)
@@ -269,6 +265,7 @@ public class MainView extends View
 
     /**
      * 应该是画16个格子的背景
+     * 
      * @param canvas
      */
     private void drawBackground(Canvas canvas)
@@ -280,11 +277,13 @@ public class MainView extends View
 
     /**
      * 画格子
+     * 
      * @param canvas
      */
     private void drawBackgroundGrid(Canvas canvas)
     {
-        Util.debugLog("MainView.drawBackgroundGrid " + " game.numSquaresX " + game.numSquaresX + " game.numSquaresY " + game.numSquaresY + " gridWidth " + gridWidth);
+        Util.debugLog("MainView.drawBackgroundGrid " + " game.numSquaresX " + game.numSquaresX
+                + " game.numSquaresY " + game.numSquaresY + " gridWidth " + gridWidth);
         // Outputting the game grid
         for (int xx = 0; xx < game.numSquaresX; xx++)
         {
@@ -294,7 +293,7 @@ public class MainView extends View
                 int eX = sX + cellSize;
                 int sY = startingY + gridWidth + (cellSize + gridWidth) * yy;
                 int eY = sY + cellSize;
-                //cellRectangle[0] 是背景色
+                // cellRectangle[0] 是背景色
                 drawDrawable(canvas, cellRectangle[0], sX, sY, eX, eY);
             }
         }
@@ -302,6 +301,7 @@ public class MainView extends View
 
     /**
      * MS是主要功能， 画界面上的方块
+     * 
      * @param canvas
      */
     private void drawCells(Canvas canvas)
@@ -319,19 +319,19 @@ public class MainView extends View
                 int sY = startingY + gridWidth + (cellSize + gridWidth) * yy;
                 int eY = sY + cellSize;
 
-                //每一个带数字的格子叫Tile
+                // 每一个带数字的格子叫Tile
                 Tile currentTile = game.grid.getCellContent(xx, yy);
                 if (currentTile != null)
                 {
                     // Get and represent the value of the tile
                     int value = currentTile.getValue();
-                    //获取index来取得对应数组的位置 e.g 32->5
+                    // 获取index来取得对应数组的位置 e.g 32->5
                     int index = log2(value);
 
                     // Check for any active animations
                     ArrayList<AnimationCell> aArray = game.aGrid.getAnimationCell(xx, yy);
                     boolean animated = false;
-                    //TODO 动画
+                    // TODO 动画
                     for (int i = aArray.size() - 1; i >= 0; i--)
                     {
                         AnimationCell aCell = aArray.get(i);
@@ -410,6 +410,7 @@ public class MainView extends View
 
     /**
      * 画结束的时候的覆盖层次
+     * 
      * @param canvas
      */
     private void drawEndGameState(Canvas canvas)
@@ -426,15 +427,7 @@ public class MainView extends View
         BitmapDrawable displayOverlay = null;
         if (game.gameWon())
         {
-            if (game.canContinue())
-            {
-                continueButtonEnabled = true;
-                displayOverlay = winGameContinueOverlay;
-            }
-            else
-            {
-                displayOverlay = winGameFinalOverlay;
-            }
+            displayOverlay = winGameFinalOverlay;
         }
         else if (game.gameLost())
         {
@@ -449,13 +442,6 @@ public class MainView extends View
         }
     }
 
-    private void drawEndlessText(Canvas canvas)
-    {
-        paint.setTextAlign(Paint.Align.LEFT);
-        paint.setTextSize(bodyTextSize);
-        paint.setColor(TEXT_BLACK);
-        canvas.drawText(endlessModeText, startingX, sYIcons - centerText() * 2, paint);
-    }
 
     private void createEndGameStates(Canvas canvas, boolean win, boolean showButton)
     {
@@ -494,6 +480,7 @@ public class MainView extends View
 
     /**
      * 画一些背景相关的静态的东西
+     * 
      * @param width
      * @param height
      */
@@ -540,7 +527,6 @@ public class MainView extends View
                                             Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         createEndGameStates(canvas, true, true);
-        winGameContinueOverlay = new BitmapDrawable(resources, bitmap);
         bitmap = Bitmap.createBitmap(endingX - startingX, endingY - startingY,
                                      Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
@@ -572,7 +558,7 @@ public class MainView extends View
     {
         if (n <= 0)
             throw new IllegalArgumentException();
-        //返回具有至多单个 1 位的 int 值，在指定的 int 值中最高位（最左边）的 1 位的位置。
+        // 返回具有至多单个 1 位的 int 值，在指定的 int 值中最高位（最左边）的 1 位的位置。
         return 31 - Integer.numberOfLeadingZeros(n);
     }
 
@@ -663,7 +649,6 @@ public class MainView extends View
             loseText = resources.getString(R.string.game_over);
             continueText = resources.getString(R.string.go_on);
             forNowText = resources.getString(R.string.for_now);
-            endlessModeText = resources.getString(R.string.endless);
             // Getting assets
             backgroundRectangle = resources.getDrawable(R.drawable.background_rectangle);
             cellRectangle[0] = resources.getDrawable(R.drawable.cell_rectangle);

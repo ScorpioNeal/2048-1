@@ -121,12 +121,7 @@ public class InputListener implements View.OnTouchListener {
 			if (!hasMoved) {
 				if (iconPressed(mView.sXNewGame, mView.sYIcons)) {
 					mView.game.newGame();
-				} else if (isTap(2)
-						&& inRange(mView.startingX, x, mView.endingX)
-						&& inRange(mView.startingY, x, mView.endingY)
-						&& mView.continueButtonEnabled) {
-					mView.game.setEndlessMode();
-				}
+				} 
 			}
 		}
 		return true;

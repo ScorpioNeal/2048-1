@@ -51,8 +51,6 @@ public class MainGame
     public static final int GAME_LOST = -1;
     public static final int GAME_NORMAL = 0;
     public static final int GAME_NORMAL_WON = 1;
-    public static final int GAME_ENDLESS = 2;
-    public static final int GAME_ENDLESS_WON = 3;
 
     public Grid grid = null;
     public AnimationGrid aGrid;
@@ -403,8 +401,7 @@ public class MainGame
     }
 
     /**
-     * 应该是判断当前界面是否可以移动了
-     *  如果下一个方块不为空而且与当前方块的值相同，返回true
+     * 应该是判断当前界面是否可以移动了 如果下一个方块不为空而且与当前方块的值相同，返回true
      * 
      * @return
      */
@@ -445,26 +442,7 @@ public class MainGame
 
     private int winValue()
     {
-        if (!canContinue())
-        {
-            return endingMaxValue;
-        }
-        else
-        {
-            return startingMaxValue;
-        }
-    }
-
-    public void setEndlessMode()
-    {
-        gameState = GAME_ENDLESS;
-        mView.invalidate();
-        mView.refreshLastTime = true;
-    }
-
-    public boolean canContinue()
-    {
-        return !(gameState == GAME_ENDLESS || gameState == GAME_ENDLESS_WON);
+        return startingMaxValue;
     }
 
     /**
