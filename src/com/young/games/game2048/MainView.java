@@ -97,14 +97,15 @@ public class MainView extends View
         Util.debugLog("MainView onDraw");
         canvas.drawBitmap(background, 0, 0, paint);
 
-        //TODO 看到这里了
         drawScoreText(canvas);
 
         if (!game.isActive() && !game.aGrid.isAnimationActive())
         {
+            //画新开始游戏的界面
             drawNewGameButton(canvas, true);
         }
-
+        
+        //TODO
         drawCells(canvas);
 
         if (!game.isActive())
@@ -170,6 +171,10 @@ public class MainView extends View
         canvas.drawText("" + value, sX + cellSize / 2, sY + cellSize / 2 - textShiftY, paint);
     }
 
+    /**
+     * 画得分的框框 score & high score,没有进去细看
+     * @param canvas
+     */
     private void drawScoreText(Canvas canvas)
     {
         // Drawing the score text: Ver 2
@@ -298,6 +303,7 @@ public class MainView extends View
 
     private void drawCells(Canvas canvas)
     {
+        Util.debugLog("MainView.drawCells");
         paint.setTextSize(textSize);
         paint.setTextAlign(Paint.Align.CENTER);
         // Outputting the individual cells
@@ -310,6 +316,7 @@ public class MainView extends View
                 int sY = startingY + gridWidth + (cellSize + gridWidth) * yy;
                 int eY = sY + cellSize;
 
+                //每一个带数字的格子叫Tile
                 Tile currentTile = game.grid.getCellContent(xx, yy);
                 if (currentTile != null)
                 {
